@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.NumbersPage"
+             x:DataType="vm:NumbersViewModel"
+             Title="Numbers">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · RationalNumber, ExactRange, NonZero"
+                Title="Numbers, read exactly"
+                Description="Text is parsed into a BigRational and compared exactly: 0.1 means 1/10, never a binary approximation. Type into any field; the verdict updates as you type." />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="18">
+                    <controls:ValidatedInput Title="Quantity" Field="Quantity" Text="{Binding Quantity}"
+                        Annotation="[Required] [RationalNumber(IntegerOnly = true)]"
+                        Placeholder="a whole number: 12, 4/2, 2.0" />
+                    <controls:ValidatedInput Title="Ratio" Field="Ratio" Text="{Binding Ratio}"
+                        Annotation="[RationalNumber(AllowDecimals = false)]"
+                        Placeholder="a number without decimals: 3/4" />
+                    <controls:ValidatedInput Title="Weight" Field="Weight" Text="{Binding Weight}"
+                        Annotation="[RationalNumber(AllowFractions = false)]"
+                        Placeholder="a number without fractions: 0.125" />
+                    <controls:ValidatedInput Title="Probability" Field="Probability" Text="{Binding Probability}"
+                        Annotation='[ExactRange("0", "1")]'
+                        Placeholder="0 to 1, both included" />
+                    <controls:ValidatedInput Title="Offset" Field="Offset" Text="{Binding Offset}"
+                        Annotation='[ExactRange("-100", "100", MinimumIsExclusive = true)]'
+                        Placeholder="in (-100, 100]" />
+                    <controls:ValidatedInput Title="Divisor" Field="Divisor" Text="{Binding Divisor}"
+                        Annotation="[Required] [NonZero]"
+                        Placeholder="any number except zero" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Edge cases" StyleClass="H2" />
+                    <Label Text="Tap a sample to put it in the Probability field. The notation is fixed: '.' is the decimal point, digit grouping is refused, and an exponent beyond ±100,000 is not a number rather than zero or infinity."
+                           StyleClass="Muted" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Samples for Probability" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Reading, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="What the library read" StyleClass="H2" />
+                    <Label Text="Probability, as an exact number. Only text that is a number gets here." StyleClass="Muted" />
+                    <controls:FactTable Facts="{Binding Reading}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Typed values are exact too" StyleClass="H2" />
+                    <Label Text="The same attribute accepts typed values. A double is converted to the shortest decimal that reads back as it, so 0.3 is 3/10 but 0.1 + 0.2 is not."
+                           StyleClass="Muted" />
+                    <Label Text='[ExactRange("0", "3/10")]  Total' StyleClass="Code,Muted" FontSize="11" />
+                    <controls:VerdictTable Rows="{Binding TypedValues}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:models="clr-namespace:MathesisMauiApp.Models"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.HomePage"
+             x:DataType="vm:HomeViewModel"
+             Title="Home">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <VerticalStackLayout Spacing="6" Padding="0,8,0,4">
+                <Label Text="Mathesis" StyleClass="Eyebrow" />
+                <Label Text="Mathematics as data, input as a contract" StyleClass="H1" FontSize="32" />
+                <Label Text="Mathesis is a .NET 10 library that represents mathematics as data and explains every step it takes. This app shows all of it, and above all how its DataAnnotations attributes turn a text box into a place where only meaningful mathematics can be entered."
+                       StyleClass="Muted" />
+                <Label Text="{Binding CatalogSummary}" StyleClass="Accent,Small" Margin="0,6,0,0" />
+            </VerticalStackLayout>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Try it" StyleClass="H2" />
+                    <Label Text="One property, one attribute. The text box below is validated while you type, and only a valid expression is passed on to the algebra system."
+                           StyleClass="Muted" />
+                    <controls:ValidatedInput Title="Expression" Field="Formula" Text="{Binding Formula}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], DisallowedFamilies = OperatorFamily.Calculus | OperatorFamily.Set)]"
+                        Placeholder="an expression in x" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" />
+                    <controls:FactTable Facts="{Binding Findings}" IsVisible="{Binding Findings, Converter={StaticResource HasItems}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Groups}" Spacing="16">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:HomeGroup">
+                        <Border StyleClass="Card">
+                            <VerticalStackLayout Spacing="12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding Title}" StyleClass="H2" />
+                                    <Label Text="{Binding Summary}" StyleClass="Muted" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}" Spacing="10">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:HomeRow">
+                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                                <Border StyleClass="Soft" BindingContext="{Binding Left}" x:DataType="models:NavItem">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnTileTapped" />
+                                                    </Border.GestureRecognizers>
+                                                    <Grid ColumnDefinitions="36,*" ColumnSpacing="10">
+                                                        <Label Text="{Binding Glyph}" FontSize="22" StyleClass="Accent" HorizontalTextAlignment="Center" VerticalOptions="Start" />
+                                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                            <Label Text="{Binding Title}" StyleClass="H3" />
+                                                            <Label Text="{Binding Summary}" StyleClass="Muted,Small" />
+                                                        </VerticalStackLayout>
+                                                    </Grid>
+                                                </Border>
+                                                <ContentView Grid.Column="1" IsVisible="{Binding HasRight}">
+                                                    <Border StyleClass="Soft" BindingContext="{Binding Right}" x:DataType="models:NavItem">
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Tapped="OnTileTapped" />
+                                                        </Border.GestureRecognizers>
+                                                        <Grid ColumnDefinitions="36,*" ColumnSpacing="10">
+                                                            <Label Text="{Binding Glyph}" FontSize="22" StyleClass="Accent" HorizontalTextAlignment="Center" VerticalOptions="Start" />
+                                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                                <Label Text="{Binding Title}" StyleClass="H3" />
+                                                                <Label Text="{Binding Summary}" StyleClass="Muted,Small" />
+                                                            </VerticalStackLayout>
+                                                        </Grid>
+                                                    </Border>
+                                                </ContentView>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Border StyleClass="Soft">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Conventions" StyleClass="H3" />
+                    <Label Text="Real mode is the default and I is the imaginary unit. Decimals are exact, bare log is base 10, 0^0 = 1, odd roots of negatives are real ((-8)^(1/3) = -2). Results are Outcome values: Success, Partial (a budget ran out), Unevaluated or Failed; exceptions are for API misuse only."
+                           StyleClass="Muted,Small" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

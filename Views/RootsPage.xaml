@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.RootsPage"
+             x:DataType="vm:RootsViewModel"
+             Title="Roots and minima">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis.Numerics · Roots, Minimize"
+                Title="Roots and minima"
+                Description="The function is an expression, validated with MathExpression so that it has exactly the variables the method needs, then compiled to a plain delegate. Newton's method gets its derivative symbolically, by finite differences, and from dual numbers." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Find a root" StyleClass="H2" />
+                    <controls:ValidatedInput Title="f(x)" Field="Function" Text="{Binding Function}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;], DisallowedFamilies = Calculus | Set | LinearAlgebra)]" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Try these, including two that the attribute refuses" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="a  (or the start x₀)" Field="First" Text="{Binding First}" Annotation="[Required] [MathExpression(Variables = [])]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="b  (bracket or second point)" Field="Second" Text="{Binding Second}" Annotation="[Required] [MathExpression(Variables = [])]" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="Tolerance" Field="Tolerance" Text="{Binding Tolerance}" Annotation="[Required] [ExactRange(&quot;0&quot;, &quot;1&quot;, MinimumIsExclusive = true)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Iterations" Field="MaxIterations" Text="{Binding MaxIterations}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;10000&quot;)]" />
+                    </Grid>
+                    <Picker Title="Method" ItemsSource="{Binding Methods}" SelectedItem="{Binding Method}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding RootFacts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Result" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding RootFacts}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding RootPlot, Converter={StaticResource IsNotNull}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Graph" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding RootPlot}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Comparison, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="All methods, same function" StyleClass="H2" />
+                    <Label Text="Newton and the secant method start from a; the bracketing methods need f(a) and f(b) of opposite sign." StyleClass="Muted" />
+                    <controls:VerdictTable Rows="{Binding Comparison}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Find a minimum" StyleClass="H2" />
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="g(x)" Field="Objective" Text="{Binding Objective}"
+                            Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;])]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="From" Field="MinFrom" Text="{Binding MinFrom}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="2" Title="To" Field="MinTo" Text="{Binding MinTo}" Annotation="[Required] [ExactRange(…)]" />
+                    </Grid>
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="h(x, y)" Field="Objective2" Text="{Binding Objective2}"
+                            Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;, &quot;y&quot;], RequiredVariables = [&quot;x&quot;, &quot;y&quot;])]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Start x" Field="StartX" Text="{Binding StartX}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="2" Title="Start y" Field="StartY" Text="{Binding StartY}" Annotation="[Required] [ExactRange(…)]" />
+                    </Grid>
+                    <controls:FactTable Facts="{Binding MinimumFacts}" IsVisible="{Binding MinimumFacts, Converter={StaticResource HasItems}}" />
+                    <controls:PlotView Model="{Binding MinimumPlot}" IsVisible="{Binding MinimumPlot, Converter={StaticResource IsNotNull}}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

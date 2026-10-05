@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.FormDemoPage"
+             x:DataType="vm:FormDemoViewModel"
+             Title="Form demo">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · all seven attributes"
+                Title="A whole model"
+                Description="One view model, annotated like any form model. CommunityToolkit.Mvvm's ObservableValidator runs the attributes, the Mathesis ones return MathValidationResult objects, and this page reads them back with their codes." />
+
+            <Border StyleClass="Card">
+                <FlexLayout Wrap="Wrap" Direction="Row">
+                    <Button Text="Fill valid" Command="{Binding FillValidCommand}" StyleClass="Secondary" Margin="0,0,8,8" />
+                    <Button Text="Fill invalid" Command="{Binding FillInvalidCommand}" StyleClass="Secondary" Margin="0,0,8,8" />
+                    <Button Text="Lower ≥ upper" Command="{Binding FillCrossPropertyCommand}" StyleClass="Secondary" Margin="0,0,8,8" />
+                    <Button Text="Clear" Command="{Binding ClearCommand}" StyleClass="Ghost" Margin="0,0,8,8" />
+                </FlexLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="18">
+                    <controls:ValidatedInput Title="Job name" Field="JobName" Text="{Binding JobName}"
+                        Annotation="[Required] [StringLength(24, MinimumLength = 3)]"
+                        Placeholder="a standard attribute next to the Mathesis ones" />
+                    <controls:ValidatedInput Title="Objective f(x)" Field="Objective" Text="{Binding Objective}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;], DisallowedFamilies = OperatorFamily.Calculus)]" />
+                    <controls:ValidatedInput Title="Constraint" Field="Constraint" Text="{Binding Constraint}"
+                        Annotation="[MathEquation(Variables = [&quot;x&quot;])]" Placeholder="optional: x^2 = 2" />
+                    <controls:ValidatedInput Title="Model polynomial" Field="ModelPolynomial" Text="{Binding ModelPolynomial}"
+                        Annotation="[Required] [PolynomialExpression(&quot;x&quot;, MaxDegree = 5)]" />
+                    <controls:ValidatedInput Title="Weights" Field="Weights" Text="{Binding Weights}"
+                        Annotation="[MathMatrix(Square = true, MaxDimension = 4)]" Placeholder="optional: [[1, 0], [0, 2]]" />
+                    <controls:ValidatedInput Title="Lower bound" Field="Lower" Text="{Binding Lower}"
+                        Annotation="[Required] [ExactRange(&quot;-100&quot;, &quot;100&quot;)]" />
+                    <controls:ValidatedInput Title="Upper bound" Field="Upper" Text="{Binding Upper}"
+                        Annotation="[Required] [ExactRange(&quot;-100&quot;, &quot;100&quot;)]" />
+                    <controls:FeedbackView Result="{Binding CrossProblem}" ShowValid="False" />
+                    <controls:ValidatedInput Title="Iterations" Field="Iterations" Text="{Binding Iterations}"
+                        Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;1000&quot;)]" />
+                    <controls:ValidatedInput Title="Scale factor" Field="Scale" Text="{Binding Scale}"
+                        Annotation="[Required] [NonZero]" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Submit" StyleClass="H2" />
+                    <Label Text="Validate all runs every property attribute and then the IValidatableObject rule, the way a Submit button would, and lists what is wrong."
+                           StyleClass="Muted" />
+                    <Button Text="Validate all" Command="{Binding ValidateAllCommand}" HorizontalOptions="Start" />
+                    <Border StyleClass="DangerBox" IsVisible="{Binding Problems, Converter={StaticResource HasItems}}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="{Binding Status}" />
+                            <controls:VerdictTable Rows="{Binding Problems}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border StyleClass="SuccessBox" IsVisible="{Binding StatusIsGood}">
+                        <Label Text="{Binding Status}" StyleClass="Success" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.InterpolationPage"
+             x:DataType="vm:InterpolationViewModel"
+             Title="Interpolation">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis.Numerics · Interpolate"
+                Title="Interpolation"
+                Description="Data points are typed as a matrix with exactly two columns; MathMatrix(Columns = 2) refuses anything else before a spline is asked to go through it." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Picker Title="Method" ItemsSource="{Binding Methods}" SelectedItem="{Binding Method}" />
+                    <Label Text="{Binding MethodNote}" StyleClass="Muted" />
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding UsesPoints}">
+                        <controls:ValidatedInput Title="Data points (x, y)" Field="Points" Text="{Binding Points}"
+                            Annotation="[Required] [MathMatrix(Columns = 2, MaxDimension = 40)]" Placeholder="[[0, 1], [1, 3], [2, 2]]" />
+                        <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Data sets, and two that are refused" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding UsesFunction}">
+                        <controls:ValidatedInput Title="f(x)" Field="Function" Text="{Binding Function}"
+                            Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;])]" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <controls:ValidatedInput Title="From" Field="From" Text="{Binding From}" Annotation="[Required] [ExactRange(…)]" />
+                            <controls:ValidatedInput Grid.Column="1" Title="To" Field="To" Text="{Binding To}" Annotation="[Required] [ExactRange(…)]" />
+                            <controls:ValidatedInput Grid.Column="2" Title="Degree" Field="Degree" Text="{Binding Degree}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(…)]" />
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding UsesSlopes}">
+                        <controls:ValidatedInput Title="Slope at the start" Field="StartSlope" Text="{Binding StartSlope}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Slope at the end" Field="EndSlope" Text="{Binding EndSlope}" Annotation="[Required] [ExactRange(…)]" />
+                    </Grid>
+
+                    <controls:ValidatedInput Title="Evaluate at x" Field="Query" Text="{Binding Query}" Annotation="[Required] [ExactRange(&quot;-1000000&quot;, &quot;1000000&quot;)]" />
+                </VerticalStackLayout>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="28" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Result" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding Plot}" HeightRequest="340" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}" />
+                    <controls:FactTable Facts="{Binding Facts}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

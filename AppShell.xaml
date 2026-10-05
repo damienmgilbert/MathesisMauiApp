@@ -3,12 +3,29 @@
     x:Class="MathesisMauiApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MathesisMauiApp"
-    Title="MathesisMauiApp">
+    xmlns:views="clr-namespace:MathesisMauiApp.Views"
+    Title="Mathesis Showcase"
+    FlyoutWidth="280"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource SurfaceDark}}">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- The menu is the flyout content (see AppShell.xaml.cs); every page is a ShellContent that the menu does not list itself. -->
+    <ShellContent Route="home" Title="Home" ContentTemplate="{DataTemplate views:HomePage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="numbers" Title="Numbers" ContentTemplate="{DataTemplate views:NumbersPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="expressions" Title="Expressions" ContentTemplate="{DataTemplate views:ExpressionsPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="polynomials" Title="Polynomials" ContentTemplate="{DataTemplate views:PolynomialsPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="matrices" Title="Matrices" ContentTemplate="{DataTemplate views:MatricesPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="form" Title="Form demo" ContentTemplate="{DataTemplate views:FormDemoPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="playground" Title="Playground" ContentTemplate="{DataTemplate views:PlaygroundPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="codes" Title="Error codes" ContentTemplate="{DataTemplate views:ErrorCodesPage}" FlyoutItemIsVisible="False" />
 
+    <ShellContent Route="algebra" Title="Algebra" ContentTemplate="{DataTemplate views:AlgebraPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="solve" Title="Solve" ContentTemplate="{DataTemplate views:SolvePage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="calculus" Title="Calculus" ContentTemplate="{DataTemplate views:CalculusPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="evaluate" Title="Evaluate" ContentTemplate="{DataTemplate views:EvaluatePage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="roots" Title="Roots and minima" ContentTemplate="{DataTemplate views:RootsPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="quadrature" Title="Quadrature" ContentTemplate="{DataTemplate views:QuadraturePage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="ode" Title="ODE solver" ContentTemplate="{DataTemplate views:OdePage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="interpolation" Title="Interpolation" ContentTemplate="{DataTemplate views:InterpolationPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="catalog" Title="Catalog" ContentTemplate="{DataTemplate views:CatalogPage}" FlyoutItemIsVisible="False" />
+    <ShellContent Route="settings" Title="Settings" ContentTemplate="{DataTemplate views:SettingsPage}" FlyoutItemIsVisible="False" />
 </Shell>

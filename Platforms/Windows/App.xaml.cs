@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,8 +17,12 @@ public partial class App : MauiWinUIApplication
 	public App()
 	{
 		this.InitializeComponent();
+
+#if DEBUG
+		// A crash inside WinUI leaves only a native fault in the event log; keep the managed exception where a script can read it.
+		UnhandledException += (_, e) => File.WriteAllText(Path.Combine(Path.GetTempPath(), "mathesis-crash.log"), e.Exception?.ToString() ?? e.Message);
+#endif
 	}
 
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
-

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             x:Class="MathesisMauiApp.Controls.FeedbackView"
+             x:Name="Root"
+             x:DataType="controls:FeedbackView">
+
+    <VerticalStackLayout Spacing="5">
+        <Border StyleClass="DangerBox" IsVisible="{Binding State.IsInvalid, Source={x:Reference Root}}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Label Text="✕" StyleClass="Danger" FontSize="16" VerticalOptions="Start" />
+                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="{Binding State.Code, Source={x:Reference Root}}" StyleClass="Code,Danger" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                        <Label Text="{Binding State.Location, Source={x:Reference Root}}" StyleClass="Muted,Small" VerticalOptions="Center" />
+                        <Label Text="{Binding State.More, Source={x:Reference Root}}" StyleClass="Muted,Small" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding State.Message, Source={x:Reference Root}}" />
+                    <Label FormattedText="{Binding State.Highlight, Source={x:Reference Root}}"
+                           IsVisible="{Binding State.HasHighlight, Source={x:Reference Root}}"
+                           StyleClass="Code" />
+                    <Label Text="{Binding State.Suggestion, Source={x:Reference Root}}"
+                           IsVisible="{Binding State.HasSuggestion, Source={x:Reference Root}}"
+                           StyleClass="Accent" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <HorizontalStackLayout Spacing="6" IsVisible="{Binding State.IsValid, Source={x:Reference Root}}">
+            <Label Text="✓" StyleClass="Success" FontAttributes="Bold" />
+            <Label Text="Valid" StyleClass="Success,Small" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

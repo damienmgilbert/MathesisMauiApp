@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:models="clr-namespace:MathesisMauiApp.Models"
+             x:Class="MathesisMauiApp.Controls.OutcomeView"
+             x:Name="Root"
+             x:DataType="controls:OutcomeView"
+             IsVisible="{Binding Outcome, Source={x:Reference Root}, Converter={StaticResource IsNotNull}}">
+
+    <VerticalStackLayout Spacing="10">
+
+        <Border StyleClass="AccentBox">
+            <Border.Triggers>
+                <DataTrigger TargetType="Border" Binding="{Binding Outcome.IsWarning, Source={x:Reference Root}}" Value="True">
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarningSoft}, Dark={StaticResource WarningSoftDark}}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Border" Binding="{Binding Outcome.IsError, Source={x:Reference Root}}" Value="True">
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource DangerSoft}, Dark={StaticResource DangerSoftDark}}" />
+                </DataTrigger>
+            </Border.Triggers>
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="{Binding Outcome.Heading, Source={x:Reference Root}}" StyleClass="Eyebrow" VerticalOptions="Center" />
+                        <Label Text="{Binding Outcome.StatusText, Source={x:Reference Root}}" StyleClass="Muted,Small" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Grid.Column="1" Spacing="4" IsVisible="{Binding Outcome.HasVerification, Source={x:Reference Root}}">
+                        <Label Text="✓" StyleClass="Success" FontAttributes="Bold" />
+                        <Label Text="{Binding Outcome.VerificationText, Source={x:Reference Root}}" StyleClass="Success,Small" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <Label Text="{Binding Outcome.Value, Source={x:Reference Root}}" StyleClass="Result" LineBreakMode="CharacterWrap"
+                       IsVisible="{Binding Outcome.HasValue, Source={x:Reference Root}}" />
+                <Label Text="{Binding Outcome.Reason, Source={x:Reference Root}}"
+                       IsVisible="{Binding Outcome.HasReason, Source={x:Reference Root}}" />
+
+                <HorizontalStackLayout Spacing="6" IsVisible="{Binding Outcome.HasProvisos, Source={x:Reference Root}}">
+                    <Label Text="Valid only where" StyleClass="Warning,Small" VerticalOptions="Center" />
+                    <Label Text="{Binding Outcome.Provisos, Source={x:Reference Root}}" StyleClass="Code,Warning" FontSize="12" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <FlexLayout Wrap="Wrap" IsVisible="{Binding Outcome.HasValue, Source={x:Reference Root}}">
+                    <Button Text="Copy" StyleClass="Ghost" Command="{Binding Outcome.CopyValueCommand, Source={x:Reference Root}}" />
+                    <Button Text="Copy as input" StyleClass="Ghost" Command="{Binding Outcome.CopyInputCommand, Source={x:Reference Root}}" />
+                    <Button Text="Copy LaTeX" StyleClass="Ghost" Command="{Binding Outcome.CopyLatexCommand, Source={x:Reference Root}}"
+                            IsVisible="{Binding Outcome.HasLatex, Source={x:Reference Root}}" />
+                </FlexLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <toolkit:Expander IsExpanded="True" IsVisible="{Binding Outcome.HasSteps, Source={x:Reference Root}}">
+            <toolkit:Expander.Header>
+                <Label Text="Steps and the laws they cite" StyleClass="H3" Padding="0,4" />
+            </toolkit:Expander.Header>
+            <VerticalStackLayout Spacing="10" Padding="0,6,0,0">
+                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                    <Picker Title="Format" ItemsSource="{Binding Outcome.Formats, Source={x:Reference Root}}"
+                            SelectedItem="{Binding Outcome.Format, Source={x:Reference Root}}" />
+                    <Picker Grid.Column="1" Title="Detail" ItemsSource="{Binding Outcome.Verbosities, Source={x:Reference Root}}"
+                            SelectedItem="{Binding Outcome.Verbosity, Source={x:Reference Root}}" />
+                    <Button Grid.Column="2" Text="Copy steps" StyleClass="Secondary" Command="{Binding Outcome.CopyStepsCommand, Source={x:Reference Root}}" />
+                </Grid>
+                <Border StyleClass="Soft">
+                    <Label Text="{Binding Outcome.StepsText, Source={x:Reference Root}}" StyleClass="Code" LineBreakMode="WordWrap" />
+                </Border>
+                <VerticalStackLayout Spacing="6" IsVisible="{Binding Outcome.HasLaws, Source={x:Reference Root}}">
+                    <Label Text="Catalog laws used (tap to open)" StyleClass="Muted,Small" />
+                    <FlexLayout BindableLayout.ItemsSource="{Binding Outcome.Laws, Source={x:Reference Root}}" Wrap="Wrap">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:LawReference">
+                                <Button Text="{Binding Name}" StyleClass="Example" Command="{Binding Open}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </toolkit:Expander>
+    </VerticalStackLayout>
+</ContentView>

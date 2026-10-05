@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.OdePage"
+             x:DataType="vm:OdeViewModel"
+             Title="ODE solver">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis.Numerics · OdeSolver"
+                Title="Differential equations"
+                Description="The right-hand side is an expression in t, y and z, so MathExpression limits it to those three names. Classical Runge–Kutta takes fixed steps; Dormand–Prince adapts its step and keeps a dense output you can evaluate anywhere." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <controls:ExampleChips Samples="{Binding PresetSamples}" Command="{Binding UsePresetCommand}" Title="Problems" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="y′ =" Field="Dy" Text="{Binding Dy}"
+                            Annotation="[Required] [MathExpression(Variables = [&quot;t&quot;, &quot;y&quot;, &quot;z&quot;], DisallowedFamilies = …)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="z′ =  (empty for one equation)" Field="Dz" Text="{Binding Dz}"
+                            Annotation="[MathExpression(Variables = [&quot;t&quot;, &quot;y&quot;, &quot;z&quot;], DisallowedFamilies = …)]" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="Start t" Field="T0" Text="{Binding T0}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="End t" Field="T1" Text="{Binding T1}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="2" Title="y(start)" Field="Y0" Text="{Binding Y0}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="3" Title="z(start)" Field="Z0" Text="{Binding Z0}" Annotation="[ExactRange(…)]" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="RK4 steps" Field="Steps" Text="{Binding Steps}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Relative tolerance" Field="RelativeTolerance" Text="{Binding RelativeTolerance}" Annotation="[Required] [ExactRange(…)]" />
+                        <controls:ValidatedInput Grid.Column="2" Title="Absolute tolerance" Field="AbsoluteTolerance" Text="{Binding AbsoluteTolerance}" Annotation="[Required] [ExactRange(…)]" />
+                    </Grid>
+                    <controls:ValidatedInput Title="Exact y(t), for comparison (optional)" Field="Exact" Text="{Binding Exact}"
+                        Annotation="[MathExpression(Variables = [&quot;t&quot;])]" Placeholder="exp(-2*t)" />
+                </VerticalStackLayout>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="28" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Solution" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding Plot}" HeightRequest="340" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}" />
+                    <controls:FactTable Facts="{Binding Facts}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

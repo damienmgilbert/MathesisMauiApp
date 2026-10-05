@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis · MathContext, Budget"
+                Title="Context and budget"
+                Description="Every page calls Mathesis with the context and the budget set here. The values are validated with the same attributes as everything else." />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Mathematics" StyleClass="H2" />
+                    <Picker Title="Number field" ItemsSource="{Binding Fields}" SelectedItem="{Binding Field}" />
+                    <Label Text="Real mode is the default: (−8)^(1/3) is −2 and x² + 1 = 0 has no solution. In complex mode I is the imaginary unit and the roots appear." StyleClass="Muted,Small" />
+                    <Picker Title="Curriculum level" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel}" />
+                    <Label Text="Steps that cite a law above the chosen level are flagged in the explanation." StyleClass="Muted,Small" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Assumptions" StyleClass="H2" />
+                    <Label Text="Facts the algebra system may rely on. With x &gt; 0, ln(x) + ln(y) combines and sqrt(x^2) simplifies." StyleClass="Muted" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Assumptions}" Spacing="6">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:AssumptionItem">
+                                <Border StyleClass="Soft">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding Text}" StyleClass="Code" VerticalOptions="Center" />
+                                        <Button Grid.Column="1" Text="Remove" StyleClass="Ghost" Command="{Binding Remove}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <controls:ValidatedInput Title="New assumption" Field="NewAssumption" Text="{Binding NewAssumption}"
+                        Annotation="[MathExpression(Shape = ExpressionShape.Inequality, CheckSorts = true)]" Placeholder="x > 0" />
+                    <Button Text="Add assumption" Command="{Binding AddAssumptionCommand}" HorizontalOptions="Start" />
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource OutlineDark}}" />
+                    <Label Text="Ask the assumptions" StyleClass="H3" />
+                    <controls:ValidatedInput Title="Is this true?" Field="Question" Text="{Binding Question}"
+                        Annotation="[MathExpression(Shape = ExpressionShape.Inequality)]" Placeholder="x > -1" />
+                    <Border StyleClass="Soft" IsVisible="{Binding Answer, Converter={StaticResource HasText}}">
+                        <Label Text="{Binding Answer}" StyleClass="Accent" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Budget" StyleClass="H2" />
+                    <Label Text="A budget stops runaway work: an operation that runs out of steps or time returns a Partial outcome instead of hanging." StyleClass="Muted" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="Step limit" Field="MaxSteps" Text="{Binding MaxSteps}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;10000000&quot;)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Time limit (seconds)" Field="MaxSeconds" Text="{Binding MaxSeconds}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;600&quot;)]" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Explanations and appearance" StyleClass="H2" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <Picker Title="Format" ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" />
+                        <Picker Grid.Column="1" Title="Detail" ItemsSource="{Binding Details}" SelectedItem="{Binding Detail}" />
+                        <Picker Grid.Column="2" Title="Theme" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}" />
+                    </Grid>
+                    <Button Text="Reset everything" Command="{Binding ResetCommand}" StyleClass="Secondary" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="About" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding About}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

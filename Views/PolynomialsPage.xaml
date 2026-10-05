@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.PolynomialsPage"
+             x:DataType="vm:PolynomialsViewModel"
+             Title="Polynomials">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · PolynomialExpression"
+                Title="Polynomials in one variable"
+                Description="Only a polynomial in x with rational coefficients gets through, up to a maximum degree. Cancellation is honoured: (x + 1)^4 − x^4 has degree 3. What passes is analysed exactly." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="16">
+                    <controls:ValidatedInput Title="Polynomial p(x)" Field="Dividend" Text="{Binding Dividend}"
+                        Annotation="[Required] [PolynomialExpression(&quot;x&quot;, MaxDegree = 6)]"
+                        Placeholder="x^3 - 6x^2 + 11x - 6" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Valid and invalid polynomials" />
+                    <controls:ValidatedInput Title="Divisor d(x)" Field="Divisor" Text="{Binding Divisor}"
+                        Annotation="[Required] [PolynomialExpression(&quot;x&quot;, MaxDegree = 4)]"
+                        Placeholder="x - 2" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Analysis, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="What the library read" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Analysis}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Graph" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding Plot}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <controls:OutcomeView Outcome="{Binding Factorization}" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Division, Converter={StaticResource IsNotNull}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Division" StyleClass="H2" />
+                    <Picker Title="Division style" ItemsSource="{Binding DivisionStyles}" SelectedItem="{Binding DivisionStyle}" />
+                    <controls:OutcomeView Outcome="{Binding Division}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

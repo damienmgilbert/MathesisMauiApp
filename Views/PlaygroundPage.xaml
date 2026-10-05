@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.PlaygroundPage"
+             x:DataType="vm:PlaygroundViewModel"
+             Title="Playground">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · every option"
+                Title="Attribute playground"
+                Description="Build any of the seven attributes at run time, hand it text or a typed value, and see exactly what it reports. Bad combinations of options are configuration errors, readable with GetConfigurationError()." />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Attribute" StyleClass="H2" />
+                    <Picker Title="Attribute" ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}" />
+                    <Border StyleClass="Soft">
+                        <Label Text="{Binding Generated}" StyleClass="Code,Accent" LineBreakMode="WordWrap" />
+                    </Border>
+                    <controls:ExampleChips Samples="{Binding Presets}" Command="{Binding ApplyPresetCommand}" Title="Presets" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Value" StyleClass="H2" />
+                    <controls:FieldEntry Title="Input" Text="{Binding Input}" Placeholder="the text to check" />
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Label Text="Handed over as" StyleClass="Muted,Small" VerticalOptions="Center" />
+                        <Picker Grid.Column="1" Title="Value kind" ItemsSource="{Binding ValueKinds}" SelectedItem="{Binding ValueKind}" />
+                    </Grid>
+                    <Label Text="{Binding Note}" StyleClass="Muted,Small" IsVisible="{Binding Note, Converter={StaticResource HasText}}" />
+
+                    <controls:FeedbackView Result="{Binding Verdict}" Text="{Binding Input}" IsVisible="{Binding ShowVerdict}" />
+
+                    <Border StyleClass="WarningBox" IsVisible="{Binding ConfigurationError, Converter={StaticResource HasText}}">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Configuration error" StyleClass="Warning" FontFamily="OpenSansSemibold" />
+                            <Label Text="{Binding ConfigurationError}" />
+                            <Label Text="The validation methods throw InvalidOperationException with this text on first use, even for a null value; GetConfigurationError() returns it without throwing, so it can be checked at start-up."
+                                   StyleClass="Muted,Small" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border StyleClass="WarningBox" IsVisible="{Binding Misuse, Converter={StaticResource HasText}}">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="API misuse" StyleClass="Warning" FontFamily="OpenSansSemibold" />
+                            <Label Text="{Binding Misuse}" />
+                            <Label Text="A value of a type the attribute does not support is a programming error, so it throws. Bad input never does." StyleClass="Muted,Small" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <controls:FactTable Facts="{Binding Facts}" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Options" StyleClass="H2" />
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsRational}">
+                        <controls:SwitchRow Text="IntegerOnly" Hint="the value must be whole: 4/2 and 2.0 pass" IsToggled="{Binding IntegerOnly}" />
+                        <controls:SwitchRow Text="AllowFractions" Hint="may text be written a/b?" IsToggled="{Binding AllowFractions}" />
+                        <controls:SwitchRow Text="AllowDecimals" Hint="may text have a point, a repeating block or an exponent?" IsToggled="{Binding AllowDecimals}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsRange}">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <controls:FieldEntry Title="Minimum" Text="{Binding Minimum}" Hint="empty: unbounded" />
+                            <controls:FieldEntry Grid.Column="1" Title="Maximum" Text="{Binding Maximum}" Hint="empty: unbounded" />
+                        </Grid>
+                        <controls:SwitchRow Text="MinimumIsExclusive" IsToggled="{Binding MinimumIsExclusive}" />
+                        <controls:SwitchRow Text="MaximumIsExclusive" IsToggled="{Binding MaximumIsExclusive}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsExpression}">
+                        <Picker Title="Shape" ItemsSource="{Binding Shapes}" SelectedItem="{Binding Shape}" IsVisible="{Binding IsMathExpression}" />
+                        <controls:FieldEntry Title="Variables" Text="{Binding VariablesText}" Hint="comma separated; empty allows any variable, a single - allows none" />
+                        <controls:FieldEntry Title="RequiredVariables" Text="{Binding RequiredVariablesText}" Hint="comma separated" />
+                        <Label Text="DisallowedFamilies" StyleClass="Muted,Small" Margin="0,6,0,0" />
+                        <controls:SwitchRow Text="OperatorFamily.Trig" IsToggled="{Binding DisallowTrig}" />
+                        <controls:SwitchRow Text="OperatorFamily.Hyperbolic" IsToggled="{Binding DisallowHyperbolic}" />
+                        <controls:SwitchRow Text="OperatorFamily.ExpLog" IsToggled="{Binding DisallowExpLog}" />
+                        <controls:SwitchRow Text="OperatorFamily.Calculus" IsToggled="{Binding DisallowCalculus}" />
+                        <controls:SwitchRow Text="OperatorFamily.LinearAlgebra" IsToggled="{Binding DisallowLinearAlgebra}" />
+                        <controls:SwitchRow Text="OperatorFamily.Set" IsToggled="{Binding DisallowSet}" />
+                        <controls:SwitchRow Text="WarningsAreErrors" Hint="an ambiguous product or an unknown function fails" IsToggled="{Binding WarningsAreErrors}" />
+                        <controls:SwitchRow Text="CheckSorts" Hint="a 2×2 matrix plus a number fails" IsToggled="{Binding CheckSorts}" />
+                        <controls:SwitchRow Text="SingleLetterVariables" Hint="xy is x·y; off: speed stays one symbol" IsToggled="{Binding SingleLetterVariables}" />
+                        <controls:SwitchRow Text="LogMeansNatural" Hint="a bare log is ln" IsToggled="{Binding LogMeansNatural}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsPolynomial}">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <controls:FieldEntry Title="Variable" Text="{Binding PolynomialVariable}" Hint="a single variable name" />
+                            <controls:FieldEntry Grid.Column="1" Title="MaxDegree" Text="{Binding MaxDegreeText}" Hint="0 to 64" />
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding IsMatrix}">
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <controls:FieldEntry Title="Rows" Text="{Binding RowsText}" Hint="0: any" />
+                            <controls:FieldEntry Grid.Column="1" Title="Columns" Text="{Binding ColumnsText}" Hint="0: any" />
+                            <controls:FieldEntry Grid.Column="2" Title="MaxDimension" Text="{Binding MaxDimensionText}" Hint="1 to 1000" />
+                        </Grid>
+                        <controls:SwitchRow Text="Square" IsToggled="{Binding Square}" />
+                        <controls:SwitchRow Text="NumericEntries" Hint="entries must be numbers as written" IsToggled="{Binding NumericEntries}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding HasFormat}">
+                        <Label Text="Format" StyleClass="Muted,Small" />
+                        <Picker Title="Format" ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" />
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource OutlineDark}}" Margin="0,6" />
+                    <Label Text="Every attribute" StyleClass="Muted,Small" />
+                    <Grid ColumnDefinitions="*,2*" ColumnSpacing="12">
+                        <controls:FieldEntry Title="MaxLength" Text="{Binding MaxLengthText}" Hint="1 to 100,000" />
+                        <controls:FieldEntry Grid.Column="1" Title="ErrorMessage" Text="{Binding CustomMessage}"
+                                             Hint="{}{0} is the display name; {1}… are the details of the code" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

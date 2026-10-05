@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             x:Class="MathesisMauiApp.Controls.SwitchRow"
+             x:Name="Root"
+             x:DataType="controls:SwitchRow">
+
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" MinimumHeightRequest="36">
+        <VerticalStackLayout VerticalOptions="Center" Spacing="1">
+            <Label Text="{Binding Text, Source={x:Reference Root}}" StyleClass="Code" FontSize="13" />
+            <Label Text="{Binding Hint, Source={x:Reference Root}}" StyleClass="Muted,Small"
+                   IsVisible="{Binding Hint, Source={x:Reference Root}, Converter={StaticResource HasText}}" />
+        </VerticalStackLayout>
+        <Switch Grid.Column="1" IsToggled="{Binding IsToggled, Source={x:Reference Root}}" VerticalOptions="Center" />
+    </Grid>
+</ContentView>

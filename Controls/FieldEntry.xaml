@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             x:Class="MathesisMauiApp.Controls.FieldEntry"
+             x:Name="Root"
+             x:DataType="controls:FieldEntry">
+
+    <VerticalStackLayout Spacing="4">
+        <Label Text="{Binding Title, Source={x:Reference Root}}" StyleClass="Muted,Small" />
+        <Border StyleClass="Field">
+            <Entry Text="{Binding Text, Source={x:Reference Root}}"
+                   Placeholder="{Binding Placeholder, Source={x:Reference Root}}"
+                   Keyboard="{Binding InputKeyboard, Source={x:Reference Root}}"
+                   IsSpellCheckEnabled="False"
+                   IsTextPredictionEnabled="False"
+                   StyleClass="Mono" />
+        </Border>
+        <Label Text="{Binding Hint, Source={x:Reference Root}}" StyleClass="Muted,Small"
+               IsVisible="{Binding Hint, Source={x:Reference Root}, Converter={StaticResource HasText}}" />
+    </VerticalStackLayout>
+</ContentView>

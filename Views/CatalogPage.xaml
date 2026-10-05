@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.CatalogPage"
+             x:DataType="vm:CatalogViewModel"
+             Title="Catalog">
+
+    <!-- A CollectionView scrolls by itself, so the page is a Grid and not a ScrollView. -->
+    <Grid RowDefinitions="Auto,*" Padding="{OnIdiom Phone=16, Default=24}" RowSpacing="12" MaximumWidthRequest="980">
+
+        <VerticalStackLayout Spacing="12">
+            <controls:PageHeader
+                Eyebrow="Mathesis.Knowledge · KnowledgeBase"
+                Title="The catalog of laws"
+                Description="Every rewrite rule, derivative and antiderivative the library applies has an entry here, with its conditions, its level and an explanation. Steps cite these entries; tap one to see it and to apply it yourself." />
+
+            <Border StyleClass="Field">
+                <Entry Text="{Binding SearchText}" Placeholder="Search by name, id, tag or explanation: pythagorean, chain rule, quadratic…"
+                       StyleClass="Mono" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" ReturnType="Search" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Picker Title="Domain" ItemsSource="{Binding Domains}" SelectedItem="{Binding Domain}" />
+                <Picker Grid.Column="1" Title="Kind" ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}" />
+                <Picker Grid.Column="2" Title="Level" ItemsSource="{Binding Levels}" SelectedItem="{Binding Level}" />
+            </Grid>
+
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="{Binding Summary}" StyleClass="Accent,Small" VerticalOptions="Center" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="18" WidthRequest="18" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Results}" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:CatalogRow">
+                    <Border StyleClass="Card" Padding="14,10" Margin="0,0,0,8">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Name}" StyleClass="H3" />
+                                <Label Text="{Binding Id}" StyleClass="Code,Muted" FontSize="12" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="End" VerticalOptions="Center">
+                                <Label Text="{Binding Kind}" StyleClass="Accent,Small" HorizontalTextAlignment="End" />
+                                <Label Text="{Binding Level}" StyleClass="Muted,Small" HorizontalTextAlignment="End" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <Label Text="No entry matches." StyleClass="Muted" HorizontalOptions="Center" Margin="0,24" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

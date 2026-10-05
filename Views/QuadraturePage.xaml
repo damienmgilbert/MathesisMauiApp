@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.QuadraturePage"
+             x:DataType="vm:QuadratureViewModel"
+             Title="Quadrature">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis.Numerics · Quadrature, FiniteDifferences"
+                Title="Integrals and derivatives, numerically"
+                Description="Every numerical result is set next to the exact answer from the symbolic layer, so the error of each method is visible. Bounds are expressions without variables, so pi and oo are allowed." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Definite integral" StyleClass="H2" />
+                    <controls:ValidatedInput Title="f(x)" Field="Function" Text="{Binding Function}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;], DisallowedFamilies = Calculus | Set | LinearAlgebra)]" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Integrands (set the bounds yourself)" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="From" Field="Lower" Text="{Binding Lower}" Annotation="[Required] [MathExpression(Variables = [])]" Placeholder="0, -oo" />
+                        <controls:ValidatedInput Grid.Column="1" Title="To" Field="Upper" Text="{Binding Upper}" Annotation="[Required] [MathExpression(Variables = [])]" Placeholder="pi, oo" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <controls:OutcomeView Outcome="{Binding ExactIntegral}" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Methods, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Quadrature methods" StyleClass="H2" />
+                    <controls:VerdictTable Rows="{Binding Methods}" />
+                    <controls:PlotView Model="{Binding Plot}" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}" Margin="0,8,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Derivative at a point" StyleClass="H2" />
+                    <controls:ValidatedInput Title="f(x)" Field="DerivativeFunction" Text="{Binding DerivativeFunction}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;], DisallowedFamilies = Calculus | Set | LinearAlgebra)]" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="At x =" Field="Point" Text="{Binding Point}" Annotation="[Required] [MathExpression(Variables = [])]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Step h" Field="Step" Text="{Binding Step}" Annotation="[Required] [ExactRange(&quot;0&quot;, &quot;1&quot;, MinimumIsExclusive = true)]" />
+                    </Grid>
+                    <controls:VerdictTable Rows="{Binding Derivatives}" IsVisible="{Binding Derivatives, Converter={StaticResource HasItems}}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.SolvePage"
+             x:DataType="vm:SolveViewModel"
+             Title="Solve">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Computer algebra · Cas.Solve, Cas.NSolve"
+                Title="Solving, with proof"
+                Description="MathEquation guarantees the solver is handed an equation and not something that merely looks like one. Every solution is substituted back, and what cannot be shown comes back as Unevaluated, never as a guess." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Picker Title="What to solve" ItemsSource="{Binding Modes}" SelectedItem="{Binding Mode}" />
+                    <Label Text="{Binding ModeNote}" StyleClass="Muted" />
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsEquation}">
+                        <controls:ValidatedInput Title="Equation" Field="Equation" Text="{Binding Equation}"
+                            Annotation="[Required] [MathEquation]" Placeholder="x^2 - 5x + 6 = 0" />
+                        <controls:ExampleChips Samples="{Binding EquationSamples}" Command="{Binding UseEquationSampleCommand}" Title="Equations, and one that is not" />
+                        <Picker Title="Method" ItemsSource="{Binding Methods}" SelectedItem="{Binding Method}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsInequality}">
+                        <controls:ValidatedInput Title="Inequality" Field="Inequality" Text="{Binding Inequality}"
+                            Annotation="[Required] [MathExpression(Shape = ExpressionShape.Inequality)]" Placeholder="(x - 1)/(x + 2) &gt;= 0" />
+                        <controls:ExampleChips Samples="{Binding InequalitySamples}" Command="{Binding UseInequalitySampleCommand}" Title="Inequalities" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsSystem}">
+                        <controls:ValidatedInput Title="First equation" Field="Equation1" Text="{Binding Equation1}" Annotation="[Required] [MathEquation]" />
+                        <controls:ValidatedInput Title="Second equation" Field="Equation2" Text="{Binding Equation2}" Annotation="[Required] [MathEquation]" />
+                        <controls:ValidatedInput Title="Third equation (optional)" Field="Equation3" Text="{Binding Equation3}" Annotation="[MathEquation]" />
+                        <controls:ValidatedInput Title="Unknowns" Field="SystemVariables" Text="{Binding SystemVariables}"
+                            Annotation="[Required] [RegularExpression(@&quot;^\s*[A-Za-z]\w*(\s*,\s*[A-Za-z]\w*)*\s*$&quot;)]" Placeholder="x, y" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsNumeric}">
+                        <controls:ValidatedInput Title="Equation" Field="Equation" Text="{Binding Equation}"
+                            Annotation="[Required] [MathEquation]" Placeholder="cos(x) = x" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <controls:ValidatedInput Title="Search from" Field="Low" Text="{Binding Low}" Annotation="[Required] [ExactRange(&quot;-1000000&quot;, &quot;1000000&quot;)]" />
+                            <controls:ValidatedInput Grid.Column="1" Title="Search to" Field="High" Text="{Binding High}" Annotation="[Required] [ExactRange(&quot;-1000000&quot;, &quot;1000000&quot;)]" />
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout IsVisible="{Binding NeedsVariable}">
+                        <controls:ValidatedInput Title="Solve for" Field="Variable" Text="{Binding Variable}"
+                            Annotation="[Required] [RegularExpression(&quot;^[A-Za-z][A-Za-z0-9_]*$&quot;)]" Placeholder="x" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="28" />
+            <controls:OutcomeView Outcome="{Binding Result}" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="The solution set" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Facts}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Graph" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding Plot}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

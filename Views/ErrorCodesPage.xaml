@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.ErrorCodesPage"
+             x:DataType="vm:ErrorCodesViewModel"
+             Title="Error codes">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · MathValidationCode"
+                Title="Every code, raised"
+                Description="A failure is a MathValidationResult with a stable Code, the Span of the text concerned and a Suggestion when one is known. The names never change, so an app can switch on them or map them to its own messages." />
+
+            <Label Text="{Binding Summary}" StyleClass="Accent,Small" />
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Groups}" Spacing="16">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CodeGroup">
+                        <VerticalStackLayout Spacing="10">
+                            <VerticalStackLayout Spacing="2" Margin="2,8,0,0">
+                                <Label Text="{Binding Title}" StyleClass="H2" />
+                                <Label Text="{Binding Summary}" StyleClass="Muted" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Cases}" Spacing="12">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CodeCase">
+                                        <Border StyleClass="Card">
+                                            <VerticalStackLayout Spacing="8">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                    <Label Text="{Binding Name}" StyleClass="Code,Accent" FontAttributes="Bold" FontSize="15" VerticalOptions="Center" />
+                                                    <Label Grid.Column="1" Text="{Binding Outcome}" StyleClass="Muted,Small" VerticalOptions="Center">
+                                                        <Label.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding StillRaisesCode}" Value="True">
+                                                                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Success}, Dark={StaticResource SuccessDark}}" />
+                                                            </DataTrigger>
+                                                        </Label.Triggers>
+                                                    </Label>
+                                                </Grid>
+                                                <Label Text="{Binding Declaration}" StyleClass="Code,Muted" FontSize="11" />
+                                                <Border StyleClass="Field">
+                                                    <Entry Text="{Binding Input}" StyleClass="Mono" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" />
+                                                </Border>
+                                                <controls:FeedbackView Result="{Binding Result}" Text="{Binding Input}" />
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

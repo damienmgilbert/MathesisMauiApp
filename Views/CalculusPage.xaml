@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.CalculusPage"
+             x:DataType="vm:CalculusViewModel"
+             Title="Calculus">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Computer algebra · Cas.Differentiate, Integrate, Limit, Taylor"
+                Title="Calculus you can check"
+                Description="Every antiderivative is differentiated back and every definite integral is compared with quadrature; the verification status of each result is shown with it." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Picker Title="Operation" ItemsSource="{Binding Operations}" SelectedItem="{Binding Operation}" />
+                    <Label Text="{Binding OperationNote}" StyleClass="Muted" />
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding UsesExpression}">
+                        <controls:ValidatedInput Title="Expression" Field="Expression" Text="{Binding Expression}"
+                            Annotation="[Required] [MathExpression(CheckSorts = true)]" Placeholder="x^2*sin(x)" />
+                        <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Examples" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding UsesImplicit}">
+                        <controls:ValidatedInput Title="Relation between x and y" Field="ImplicitEquation" Text="{Binding ImplicitEquation}"
+                            Annotation="[Required] [MathEquation]" Placeholder="x^2 + y^2 = 25" />
+                        <controls:ValidatedInput Title="Dependent variable" Field="Dependent" Text="{Binding Dependent}"
+                            Annotation="[Required] [RegularExpression(&quot;^[A-Za-z][A-Za-z0-9_]*$&quot;)]" />
+                    </VerticalStackLayout>
+
+                    <controls:ValidatedInput Title="With respect to" Field="Variable" Text="{Binding Variable}"
+                        Annotation="[Required] [RegularExpression(&quot;^[A-Za-z][A-Za-z0-9_]*$&quot;)]" />
+
+                    <VerticalStackLayout IsVisible="{Binding UsesOrder}">
+                        <controls:ValidatedInput Title="Order of the derivative" Field="Order" Text="{Binding Order}"
+                            Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;10&quot;)]" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding UsesBounds}">
+                        <controls:ValidatedInput Title="From" Field="Lower" Text="{Binding Lower}"
+                            Annotation="[Required] [MathExpression(Variables = [])]" Placeholder="0, -oo, pi/2" />
+                        <controls:ValidatedInput Grid.Column="1" Title="To" Field="Upper" Text="{Binding Upper}"
+                            Annotation="[Required] [MathExpression(Variables = [])]" Placeholder="1, oo, pi" />
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding UsesPoint}">
+                        <controls:ValidatedInput Title="As the variable approaches" Field="Point" Text="{Binding Point}"
+                            Annotation="[Required] [MathExpression(Variables = [])]" Placeholder="0, 1, oo" />
+                        <Picker Title="Direction" ItemsSource="{Binding Directions}" SelectedItem="{Binding Direction}" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding UsesCenter}">
+                        <controls:ValidatedInput Title="Centre" Field="Center" Text="{Binding Center}"
+                            Annotation="[Required] [MathExpression(Variables = [])]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Order" Field="TaylorOrder" Text="{Binding TaylorOrder}"
+                            Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;0&quot;, &quot;20&quot;)]" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="28" />
+            <controls:OutcomeView Outcome="{Binding Result}" />
+
+            <Border StyleClass="Card" IsVisible="{Binding Plot, Converter={StaticResource IsNotNull}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Graph" StyleClass="H2" />
+                    <controls:PlotView Model="{Binding Plot}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

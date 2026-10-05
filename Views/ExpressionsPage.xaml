@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.ExpressionsPage"
+             x:DataType="vm:ExpressionsViewModel"
+             Title="Expressions">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · MathExpression, MathEquation"
+                Title="Expressions and equations"
+                Description="The text is parsed, never evaluated, so even 9^9^9 costs nothing. The first failure wins: syntax, parser warnings, sorts, shape, variables, then function families." />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="18">
+                    <Label Text="Shape, variables and families" StyleClass="H2" />
+                    <controls:ValidatedInput Title="Formula" Field="Formula" Text="{Binding Formula}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], DisallowedFamilies = OperatorFamily.Trig | OperatorFamily.Hyperbolic)]"
+                        Placeholder="an expression in x, without trigonometry" />
+                    <controls:ExampleChips Samples="{Binding FormulaSamples}" Command="{Binding UseFormulaSampleCommand}" Title="Samples for Formula" />
+                    <controls:ValidatedInput Title="Equation" Field="Equation" Text="{Binding Equation}"
+                        Annotation="[Required] [MathEquation(RequiredVariables = [&quot;x&quot;])]"
+                        Placeholder="x^2 - 5x + 6 = 0" />
+                    <controls:ValidatedInput Title="Inequality" Field="Inequality" Text="{Binding Inequality}"
+                        Annotation="[MathExpression(Shape = ExpressionShape.Inequality, Variables = [&quot;x&quot;])]"
+                        Placeholder="one relation: &lt;, &lt;=, &gt;, &gt;= or !=" />
+                    <controls:ValidatedInput Title="Interval" Field="Interval" Text="{Binding Interval}"
+                        Annotation="[MathExpression(Shape = ExpressionShape.Interval)]"
+                        Placeholder="[0, oo)  or  ]0, 1]" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="18">
+                    <Label Text="Notation and strictness" StyleClass="H2" />
+                    <controls:ValidatedInput Title="LaTeX formula" Field="Latex" Text="{Binding Latex}"
+                        Annotation="[MathExpression(Format = InputFormat.Latex, Variables = [&quot;x&quot;])]"
+                        Placeholder="\frac{x^{2} - 1}{x + 1}" />
+                    <controls:ValidatedInput Title="Strict expression" Field="Strict" Text="{Binding Strict}"
+                        Annotation="[MathExpression(WarningsAreErrors = true, CheckSorts = true)]"
+                        Placeholder="try 1/2x, sqr(x) or [[1, 2]] + 1" />
+                    <controls:ValidatedInput Title="Named quantities" Field="Words" Text="{Binding Words}"
+                        Annotation="[MathExpression(SingleLetterVariables = false, Variables = [&quot;speed&quot;, &quot;time&quot;], RequiredVariables = [&quot;speed&quot;])]"
+                        Placeholder="speed*time" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Inspector" StyleClass="H2" />
+                    <Label Text="Anything that parses is accepted here, and the library tells you what it read: the kind, the variables, the operator families, the sort, and the JSON form of the tree."
+                           StyleClass="Muted" />
+                    <controls:ValidatedInput Title="Anything" Field="Inspect" Text="{Binding Inspect}"
+                        Annotation="[Required] [MathExpression]" Placeholder="an expression, relation, matrix, set or interval" />
+                    <controls:ExampleChips Samples="{Binding InspectSamples}" Command="{Binding UseInspectSampleCommand}" Title="Different kinds of input" />
+                    <controls:FactTable Facts="{Binding Inspection}" IsVisible="{Binding Inspection, Converter={StaticResource HasItems}}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             x:Class="MathesisMauiApp.Controls.ValidatedInput"
+             x:Name="Root"
+             x:DataType="controls:ValidatedInput">
+
+    <VerticalStackLayout Spacing="5">
+        <Label Text="{Binding Title, Source={x:Reference Root}}" StyleClass="H3" />
+        <Label Text="{Binding Annotation, Source={x:Reference Root}}"
+               StyleClass="Code,Muted"
+               FontSize="11"
+               IsVisible="{Binding Annotation, Source={x:Reference Root}, Converter={StaticResource HasText}}" />
+
+        <Border StyleClass="Field">
+            <Border.Triggers>
+                <DataTrigger TargetType="Border" Binding="{Binding IsOk, Source={x:Reference Root}}" Value="True">
+                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Success}, Dark={StaticResource SuccessDark}}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Border" Binding="{Binding HasError, Source={x:Reference Root}}" Value="True">
+                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
+                </DataTrigger>
+            </Border.Triggers>
+            <Grid>
+                <Entry Text="{Binding Text, Source={x:Reference Root}}"
+                       Placeholder="{Binding Placeholder, Source={x:Reference Root}}"
+                       Keyboard="{Binding InputKeyboard, Source={x:Reference Root}}"
+                       IsVisible="{Binding IsMultiline, Source={x:Reference Root}, Converter={StaticResource Not}}"
+                       IsSpellCheckEnabled="False"
+                       IsTextPredictionEnabled="False"
+                       StyleClass="Mono" />
+                <Editor Text="{Binding Text, Source={x:Reference Root}}"
+                        Placeholder="{Binding Placeholder, Source={x:Reference Root}}"
+                        Keyboard="{Binding InputKeyboard, Source={x:Reference Root}}"
+                        IsVisible="{Binding IsMultiline, Source={x:Reference Root}}"
+                        IsSpellCheckEnabled="False"
+                        IsTextPredictionEnabled="False"
+                        AutoSize="TextChanges"
+                        MinimumHeightRequest="70"
+                        StyleClass="Mono" />
+            </Grid>
+        </Border>
+
+        <controls:FeedbackView Result="{Binding Result, Source={x:Reference Root}}"
+                               Text="{Binding Text, Source={x:Reference Root}}"
+                               ExtraErrors="{Binding ExtraErrors, Source={x:Reference Root}}" />
+    </VerticalStackLayout>
+</ContentView>

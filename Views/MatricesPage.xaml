@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:models="clr-namespace:MathesisMauiApp.Models"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.MatricesPage"
+             x:DataType="vm:MatricesViewModel"
+             Title="Matrices">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Data annotations · MathMatrix"
+                Title="Matrices, validated then solved"
+                Description="A matrix is written [[1, 2], [3, 4]]. MathMatrix checks the shape, the dimensions and that every entry is a number; what it lets through is converted to an exact matrix and put to work." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="16">
+                    <controls:ValidatedInput Title="Matrix A" Field="MatrixA" Text="{Binding MatrixA}"
+                        Annotation="[Required] [MathMatrix(MaxDimension = 6)]"
+                        Placeholder="[[2, 1], [1, 3]]" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Valid and invalid matrices" />
+                    <controls:ValidatedInput Title="Vector b (for A·x = b)" Field="VectorB" Text="{Binding VectorB}"
+                        Annotation="[MathMatrix(Columns = 1, MaxDimension = 6)]"
+                        Placeholder="a column: [[1], [2], [3]]" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Operation" StyleClass="H2" />
+                    <Picker Title="Operation" ItemsSource="{Binding Operations}" SelectedItem="{Binding Operation}" />
+                    <Label Text="{Binding OperationNote}" StyleClass="Muted" />
+                    <controls:FeedbackView Result="{Binding OperationProblem}" Text="{Binding MatrixA}" ShowValid="False" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Result" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Facts}" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Blocks}" Spacing="14">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:MatrixResult">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="{Binding Title}" StyleClass="H3" />
+                                    <ScrollView Orientation="Horizontal" IsVisible="{Binding HasMatrix}">
+                                        <controls:MatrixView Matrix="{Binding Matrix}" />
+                                    </ScrollView>
+                                    <Border StyleClass="Soft" IsVisible="{Binding HasText}">
+                                        <Label Text="{Binding Text}" StyleClass="Code" />
+                                    </Border>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

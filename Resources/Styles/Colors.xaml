@@ -18,6 +18,37 @@
     <Color x:Key="MidnightBlue">#190649</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
 
+    <!-- Showcase palette: every semantic colour has a light value and a "Dark" twin. -->
+    <Color x:Key="PageBackground">#F5F4FA</Color>
+    <Color x:Key="PageBackgroundDark">#101014</Color>
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="SurfaceDark">#1B1B22</Color>
+    <Color x:Key="SurfaceAlt">#EEECF7</Color>
+    <Color x:Key="SurfaceAltDark">#262630</Color>
+    <Color x:Key="Outline">#DAD7E8</Color>
+    <Color x:Key="OutlineDark">#3A3A47</Color>
+    <Color x:Key="TextPrimary">#1B1B22</Color>
+    <Color x:Key="TextPrimaryDark">#F2F1F8</Color>
+    <Color x:Key="TextSecondary">#5C5A6E</Color>
+    <Color x:Key="TextSecondaryDark">#A9A7BC</Color>
+
+    <Color x:Key="Success">#1B7F3B</Color>
+    <Color x:Key="SuccessDark">#6FD48F</Color>
+    <Color x:Key="SuccessSoft">#E3F5E9</Color>
+    <Color x:Key="SuccessSoftDark">#1B3526</Color>
+    <Color x:Key="Danger">#C5221F</Color>
+    <Color x:Key="DangerDark">#FF8F8A</Color>
+    <Color x:Key="DangerSoft">#FCE8E6</Color>
+    <Color x:Key="DangerSoftDark">#3D2123</Color>
+    <Color x:Key="Warning">#8F5300</Color>
+    <Color x:Key="WarningDark">#FFC15C</Color>
+    <Color x:Key="WarningSoft">#FFF1D6</Color>
+    <Color x:Key="WarningSoftDark">#392E17</Color>
+    <Color x:Key="Accent">#00796B</Color>
+    <Color x:Key="AccentDark">#5FD3C3</Color>
+    <Color x:Key="AccentSoft">#DDF3F0</Color>
+    <Color x:Key="AccentSoftDark">#16332F</Color>
+
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
     <Color x:Key="Gray300">#ACACAC</Color>

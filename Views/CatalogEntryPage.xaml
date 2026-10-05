@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:models="clr-namespace:MathesisMauiApp.Models"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.CatalogEntryPage"
+             x:DataType="vm:CatalogEntryViewModel"
+             Title="Catalog entry">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <Border StyleClass="WarningBox" IsVisible="{Binding NotFound, Converter={StaticResource HasText}}">
+                <Label Text="{Binding NotFound}" />
+            </Border>
+
+            <VerticalStackLayout Spacing="4" Padding="0,4,0,8">
+                <Label Text="{Binding Badges}" StyleClass="Eyebrow" />
+                <Label Text="{Binding Name}" StyleClass="H1" SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="{Binding EntryId}" StyleClass="Code,Accent" />
+            </VerticalStackLayout>
+
+            <Border StyleClass="Card" IsVisible="{Binding HasExplanation}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="In words" StyleClass="H2" />
+                    <Label Text="{Binding Explanation}" FontSize="16" />
+                    <Label Text="Names in braces stand for the parts of your expression that the law matched." StyleClass="Muted,Small" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Facts, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="The entry" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Facts}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding SeeAlso, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="See also" StyleClass="H2" />
+                    <FlexLayout BindableLayout.ItemsSource="{Binding SeeAlso}" Wrap="Wrap">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:LawReference">
+                                <Button Text="{Binding Name}" StyleClass="Example" Command="{Binding Open}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding CanApply}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Apply this law" StyleClass="H2" />
+                    <Label Text="{Binding ApplyHint}" StyleClass="Muted" />
+                    <controls:ValidatedInput Title="Expression" Field="ApplyTo" Text="{Binding ApplyTo}"
+                        Annotation="[Required] [MathExpression]" Placeholder="an expression the law can rewrite" />
+                    <controls:OutcomeView Outcome="{Binding Result}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Back to the catalog" Command="{Binding BackCommand}" StyleClass="Secondary" HorizontalOptions="Start" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.EvaluatePage"
+             x:DataType="vm:EvaluateViewModel"
+             Title="Evaluate">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Mathesis.Core · BigRational, Complex, Interval, Dual"
+                Title="One expression, five number systems"
+                Description="The same expression compiled to exact rationals, doubles, complex numbers, intervals and dual numbers. Each system answers a different question: what is it exactly, how big is it, where is it in the plane, how sure are we, how fast does it change." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="16">
+                    <controls:ValidatedInput Title="Expression in x" Field="Expression" Text="{Binding Expression}"
+                        Annotation="[Required] [MathExpression(Variables = [&quot;x&quot;], RequiredVariables = [&quot;x&quot;], DisallowedFamilies = Calculus | LinearAlgebra | Set)]" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Examples" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="x" Field="XValue" Text="{Binding XValue}" Annotation="[Required] [ExactRange(&quot;-1000&quot;, &quot;1000&quot;)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Imaginary part of x" Field="Imaginary" Text="{Binding Imaginary}" Annotation="[Required] [ExactRange(&quot;-1000&quot;, &quot;1000&quot;)]" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <controls:ValidatedInput Title="Interval radius" Field="Radius" Text="{Binding Radius}" Annotation="[Required] [ExactRange(&quot;0&quot;, &quot;10&quot;)]" />
+                        <controls:ValidatedInput Grid.Column="1" Title="Digits" Field="Digits" Text="{Binding Digits}" Annotation="[Required] [RationalNumber(IntegerOnly = true)] [ExactRange(&quot;1&quot;, &quot;15&quot;)]" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StyleClass="Card" IsVisible="{Binding Exact, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Exact" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Exact}" />
+                </VerticalStackLayout>
+            </Border>
+            <Border StyleClass="Card" IsVisible="{Binding Approximate, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Floating point and complex" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Approximate}" />
+                </VerticalStackLayout>
+            </Border>
+            <Border StyleClass="Card" IsVisible="{Binding Rigorous, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Interval arithmetic" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Rigorous}" />
+                </VerticalStackLayout>
+            </Border>
+            <Border StyleClass="Card" IsVisible="{Binding Differentiated, Converter={StaticResource HasItems}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Automatic differentiation" StyleClass="H2" />
+                    <controls:FactTable Facts="{Binding Differentiated}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

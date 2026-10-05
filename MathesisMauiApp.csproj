@@ -28,7 +28,7 @@
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Display name -->
-		<ApplicationTitle>MathesisMauiApp</ApplicationTitle>
+		<ApplicationTitle>Mathesis Showcase</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.mathesismauiapp</ApplicationId>
@@ -68,6 +68,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
+		<!-- Mathesis is built against System.Numerics.Tensors 10.0.12. Windows App SDK pulls in 9.0.0, which would win over a plain file reference. -->
+		<PackageReference Include="System.Numerics.Tensors" Version="10.0.12" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -91,9 +95,6 @@
 	  </Reference>
 	  <Reference Include="Mathesis.Validation">
 	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Validation.dll</HintPath>
-	  </Reference>
-	  <Reference Include="System.Numerics.Tensors">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\System.Numerics.Tensors.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

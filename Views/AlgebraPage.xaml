@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MathesisMauiApp.Controls"
+             xmlns:vm="clr-namespace:MathesisMauiApp.ViewModels"
+             x:Class="MathesisMauiApp.Views.AlgebraPage"
+             x:DataType="vm:AlgebraViewModel"
+             Title="Algebra">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{OnIdiom Phone=16, Default=24}" Spacing="16" MaximumWidthRequest="980">
+
+            <controls:PageHeader
+                Eyebrow="Computer algebra · Cas.Simplify, Expand, Factor and more"
+                Title="Algebra with the steps shown"
+                Description="Pick an operation and an expression. The result comes back as an Outcome: a value with its steps, provisos and verification status, or the reason there is none." />
+
+            <controls:ProblemBanner Message="{Binding Problem}" />
+
+            <Border StyleClass="Card">
+                <VerticalStackLayout Spacing="14">
+                    <Picker Title="Operation" ItemsSource="{Binding Operations}" SelectedItem="{Binding Operation}" />
+                    <Label Text="{Binding OperationNote}" StyleClass="Muted" />
+                    <controls:ValidatedInput Title="Expression" Field="Expression" Text="{Binding Expression}"
+                        Annotation="[Required] [MathExpression(CheckSorts = true)]" Placeholder="an expression" />
+                    <controls:ExampleChips Samples="{Binding Samples}" Command="{Binding UseSampleCommand}" Title="Examples for this operation" />
+                    <VerticalStackLayout IsVisible="{Binding NeedsVariable}">
+                        <controls:ValidatedInput Title="Variable" Field="Variable" Text="{Binding Variable}"
+                            Annotation="[Required] [RegularExpression(&quot;^[A-Za-z][A-Za-z0-9_]*$&quot;)]" Placeholder="x" />
+                    </VerticalStackLayout>
+                    <controls:SwitchRow Text="Assume every variable is positive" Hint="logarithm and radical laws need it; Settings holds assumptions for every page" IsToggled="{Binding AssumePositive}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HeightRequest="28" />
+            <controls:OutcomeView Outcome="{Binding Result}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
