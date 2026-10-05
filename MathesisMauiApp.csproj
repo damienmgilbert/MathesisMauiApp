@@ -66,36 +66,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mathesis" Version="0.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
 		<!-- Mathesis is built against System.Numerics.Tensors 10.0.12. Windows App SDK pulls in 9.0.0, which would win over a plain file reference. -->
 		<PackageReference Include="System.Numerics.Tensors" Version="10.0.12" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="Mathesis">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.Core">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Core.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.Knowledge">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Knowledge.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.LinearAlgebra">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.LinearAlgebra.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.Numerics">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Numerics.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.Symbolics">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Symbolics.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Mathesis.Validation">
-	    <HintPath>..\Mathesis\src\Mathesis\bin\Release\net10.0\publish\Mathesis.Validation.dll</HintPath>
-	  </Reference>
 	</ItemGroup>
 
 </Project>
